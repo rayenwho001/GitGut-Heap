@@ -60,6 +60,8 @@ struct malloc_chunk {
 };
 
 Result: writes victim address to (target - 0x20) + 0x20 = target
+
+
 <img alt="image" src="https://github.com/user-attachments/assets/d29bf98d-f196-4384-87c9-b5caa56c584f" width="50%" />
 
 Now we're ready let's get into practice!! 
@@ -92,6 +94,8 @@ Finally, allocate another dummy chunk  g4(0x438) larger than [p2] to place [p2] 
 He is treating our target like it's p2 because of the modified bk_nextsize.
 And like that we succeded at modifying our target. Good Job! 
 You can try and practice the same concept with the challenge attached. GL HF!
+
+
 <img alt="image" src="https://github.com/user-attachments/assets/23a7f5ad-673c-4078-9794-103532f412b3" width="50%" />
 
 
