@@ -10,8 +10,8 @@ This vulnrability allows an attacker to write a heap address to an arbitrary mem
 **1) Largebin structures :**
 
 LargeBins are used for managing free chunks larger than 1024 bytes (on 64-bit systems) and they are set this way:
-<img width="852" height="232" alt="image" src="https://github.com/user-attachments/assets/260587f6-85bc-40fd-bfd0-a61b37e91476" />
-<img width="549" height="341" alt="image" src="https://github.com/user-attachments/assets/1675bb6d-abf0-4653-b2af-b98c5812f915" />
+<img  alt="image" src="https://github.com/user-attachments/assets/260587f6-85bc-40fd-bfd0-a61b37e91476" width="50%" />
+<img alt="image" src="https://github.com/user-attachments/assets/1675bb6d-abf0-4653-b2af-b98c5812f915" width="50%"  />
 
 **You might ask where does these pointers take us to?**
 Since largebins are managed in a way thats lets them be classified into groups based on their size. for example : (0x400-0x440 / 0x441-0x480 ...) 
@@ -83,13 +83,17 @@ Then we free p2 , and at this point we have one chunk in large bin [p1], and one
 And now as explained earlier by modifying the p1-> bk_nextsize to target-0x20 we will be able to modify target address.
 Since Glibc does not check chunk->bk_nextsize if the newly inserted chunk is smaller than smallest, the modified p1->bk_nextsize does not trigger any error. 
 
-<img width="702" height="274" alt="image" src="https://github.com/user-attachments/assets/ba26596e-b751-48d7-9b5e-7e719d043b50" />
+<img width="618" height="268" alt="image" src="https://github.com/user-attachments/assets/d58c1fac-9bd2-4bd5-b195-7d2983da34bd" />
 
 Finally, allocate another dummy chunk  g4(0x438) larger than [p2] to place [p2] (who is smaller than [p1]) into large bin
 
 <img width="517" height="141" alt="image" src="https://github.com/user-attachments/assets/1deda972-bc22-42fd-a736-0eb4a53b64e2" />
 
 He is treating our target like it's p2 because of the modified bk_nextsize.
+And like that we succeded at modifying our target. Good Job! 
+You can try and practice the same concept with the challenge attached. GL HF!
+<img width="481" height="581" alt="image" src="https://github.com/user-attachments/assets/23a7f5ad-673c-4078-9794-103532f412b3" />
+
 
 
 
