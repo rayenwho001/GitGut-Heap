@@ -23,7 +23,7 @@ So We need pointers to navigate through these different-sized groups and within 
 - fd, bk pointers points to the **same-size chunks** following by the inserted time sequence.
 So overall our largebin will look like this
 
-<img width="978" height="694" alt="image" src="https://github.com/user-attachments/assets/04b4b7c0-d482-44c3-bc0f-bbe388cd4c4f" />
+<img alt="image" src="https://github.com/user-attachments/assets/04b4b7c0-d482-44c3-bc0f-bbe388cd4c4f" width="75%" />
 
 **2) Malloc's checks and constraints**
 
@@ -60,7 +60,7 @@ struct malloc_chunk {
 };
 
 Result: writes victim address to (target - 0x20) + 0x20 = target
-<img width="1015" height="518" alt="image" src="https://github.com/user-attachments/assets/d29bf98d-f196-4384-87c9-b5caa56c584f" />
+<img alt="image" src="https://github.com/user-attachments/assets/d29bf98d-f196-4384-87c9-b5caa56c584f" width="50%" />
 
 Now we're ready let's get into practice!! 
 
@@ -70,29 +70,29 @@ You can use commands to better visualise your problem : b * malloc ; b * free ; 
 
 First thing we will be doing is to create two large-sized chunks p1(0x428) and p2(0x418) smaller than p1 , then we free p1
 
-<img width="678" height="122" alt="image" src="https://github.com/user-attachments/assets/388c2f34-f2ff-4696-a608-4a3163cb9d30" />
+<img alt="image" src="https://github.com/user-attachments/assets/388c2f34-f2ff-4696-a608-4a3163cb9d30" width="50%"  />
 
 The freed chunk is in the unsorted bin list , to be able to move it to largebins we gotta allocate a larger chunk g3(0x438)  (malloc says "these chunks in unsorted bin are too small for this request, let me move them to their proper largebins so next time i can easily find large-sized freed chunks there)
 
-<img width="650" height="301" alt="image" src="https://github.com/user-attachments/assets/4cbd7d14-8285-48e8-9e25-4a752baf3f4a" />
+<img alt="image" src="https://github.com/user-attachments/assets/4cbd7d14-8285-48e8-9e25-4a752baf3f4a" width="50%" />
 
 Then we free p2 , and at this point we have one chunk in large bin [p1], and one chunk in unsorted bin [p2]
 
-<img width="472" height="230" alt="image" src="https://github.com/user-attachments/assets/e5a4de47-54af-445c-b4ea-8e3f522d83b3" />
+<img alt="image" src="https://github.com/user-attachments/assets/e5a4de47-54af-445c-b4ea-8e3f522d83b3" width="50%"  />
 
 And now as explained earlier by modifying the p1-> bk_nextsize to target-0x20 we will be able to modify target address.
 Since Glibc does not check chunk->bk_nextsize if the newly inserted chunk is smaller than smallest, the modified p1->bk_nextsize does not trigger any error. 
 
-<img width="618" height="268" alt="image" src="https://github.com/user-attachments/assets/d58c1fac-9bd2-4bd5-b195-7d2983da34bd" />
+<img alt="image" src="https://github.com/user-attachments/assets/d58c1fac-9bd2-4bd5-b195-7d2983da34bd" width="50%" />
 
 Finally, allocate another dummy chunk  g4(0x438) larger than [p2] to place [p2] (who is smaller than [p1]) into large bin
 
-<img width="517" height="141" alt="image" src="https://github.com/user-attachments/assets/1deda972-bc22-42fd-a736-0eb4a53b64e2" />
+<img alt="image" src="https://github.com/user-attachments/assets/1deda972-bc22-42fd-a736-0eb4a53b64e2" width="50%"  />
 
 He is treating our target like it's p2 because of the modified bk_nextsize.
 And like that we succeded at modifying our target. Good Job! 
 You can try and practice the same concept with the challenge attached. GL HF!
-<img width="481" height="581" alt="image" src="https://github.com/user-attachments/assets/23a7f5ad-673c-4078-9794-103532f412b3" />
+<img alt="image" src="https://github.com/user-attachments/assets/23a7f5ad-673c-4078-9794-103532f412b3" width="50%" />
 
 
 
